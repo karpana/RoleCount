@@ -1,0 +1,13 @@
+## Interface: 120001
+## Title: RoleCount
+## Notes: Shows a simple count of how many of each role you have in your group.
+## Author: Karpana @ Ysera-US
+## Version: 12.0.1-0001
+
+
+## SavedVariables: RoleCountDB
+
+## Load core
+RoleCount.lua
+
+
