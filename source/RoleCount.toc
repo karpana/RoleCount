@@ -5,6 +5,7 @@
 ## Version: 12.0.1-0001
 ## Category: User Interface
 ## SavedVariables: RoleCountDB
+## IconTexture: Interface\AddOns\RoleCount\Textures\RoleCount
 
 ## Load Libraries and Dependencies
 libs\LibEditMode\embed.xml
