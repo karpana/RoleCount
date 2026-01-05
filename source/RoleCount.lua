@@ -2,37 +2,46 @@
 local appName = "RoleCount"
 
 
-print ("RoleCount>  Starting up...")
+
+-- ****************************************************************
+-- * BASE DEFINITIONS FOR OUR ADDON AND VARIOUS CALLBAKCS
+-- ****************************************************************
+local defaultPosition = {
+	point = 'CENTER',
+	x = 0,
+	y = 0,
+}
+
+local defaultColour = {
+    r = 1,
+    g = 1,
+    b = 1,
+    a = 1
+}
 
 
 
+local function onPositionChanged(frame, layoutName, point, x, y)
+	-- from here you can save the position into a savedvariable
+	RoleCountDB[layoutName].point = point
+	RoleCountDB[layoutName].x = x
+	RoleCountDB[layoutName].y = y
+end
 
 
--- Define a local frame to register events if running as an addon
 
--- 1. Create a parent frame that will be the "anchor" for movement
-local frame = CreateFrame("Frame", "RoleCountMoveableTextFrame, UIParent")
-frame:SetSize(50,15)
-frame:SetPoint("CENTER") -- this sets the default location ... but blizz seems to save it if we move it.
+-- Create a parent frame that will be the "anchor" for movement.  This is also where we'll register events
+local roleCountFrame = CreateFrame("Frame", "RoleCount", UIParent)
+roleCountFrame:SetSize(75,15)
+roleCountFrame:SetClampedToScreen(true)                                              -- Prevent text from being dragged off screen
 
--- 2. Prevent text from being dragged off screen
-frame:SetClampedToScreen(true)
+-- Create the actual text (FontString) inside that frame
+local roleCountText = roleCountFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+roleCountText:SetPoint("CENTER", roleCountFrame, "CENTER") 
+roleCountText:SetText("-[ " .. appName .. " ]-")                                      -- this gets updated later (via events)
+--roleCountText:SetFont("Fonts\\FRIZQT__.TTF", 16)                                      -- we won't have options to change the font size, because we've got a scaler.  And this is the default font.
+--roleCountText:SetTextColor(1.0,1.0,1.0,1.0)                                           -- set default to white and fully solid (4th parm)         --TODO: Parameterize 
 
--- 3. Create the actual text (FontString) inside that frame
-local text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-text:SetPoint("CENTER", frame, "CENTER") 
-text:SetText("<RoleCount>")                             -- this gets updated later (via events)
-text:SetFont("Fonts\\FRIZQT__.TTF", 9)               -- set font size to 9                                       --TODO: Parameterize (default 16)
-text:SetTextColor(1.0,1.0,1.0,1.0)                   -- set default to white and fully solid (4th parm)         --TODO: Parameterize 
-
--- 4. Enable movement for the frame
-frame:SetMovable(true)
-frame:EnableMouse(true)
-frame:RegisterForDrag("LeftButton")
-
--- 5. Define drag behavior
-frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
-frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 
 
 
@@ -40,10 +49,10 @@ frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 
 -- Register for an event that fires when the group composition changes
 -- GROUP_ROSTER_UPDATE is used for both party and raid updates now
-frame:RegisterEvent("GROUP_ROSTER_UPDATE")
+roleCountFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 -- Set a script to run when the event is triggered
-frame:SetScript("OnEvent", function(self, event, ...)
+roleCountFrame:SetScript("OnEvent", function(self, event, ...)
     if DLAPI then DLAPI.DebugLog(appName, "Group roster updated. Scanning members...") end
 
     local numMembers = GetNumGroupMembers()
@@ -51,7 +60,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
     local healerCount = 0
     local damagerCount = 0
 
-    local resultString="not grouped"
+    local resultString="" -- make it 'disappear'
 
 
     if numMembers > 0 then 
@@ -61,7 +70,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
     local _, instanceType = IsInInstance()
     
     if (instanceType ~="raid") then
-      --add self to table
+      --add self to table when not in a raid 
       local playerName = UnitName("player")
       table.insert(groupMembers,playerName)
     end
@@ -95,19 +104,99 @@ frame:SetScript("OnEvent", function(self, event, ...)
     
     end
 
-    text:SetText(resultString)
-
+     roleCountText:SetText(resultString)
 end)
 
 
--- An initial call can be made upon loading, especially in an addon's OnLoad script
-frame:GetScript("OnEvent")(frame, "GROUP_ROSTER_UPDATE")
 
--- Check if the player is in a group (party or raid) using IsInGroup()
---if IsInGroup() then
-    -- Manually trigger the scan when the addon loads, if already in a group
-    -- frame:GetScript("OnEvent")(frame, "GROUP_ROSTER_UPDATE")
---end
+
+
+
+-- ****************************************************************
+-- * DEFINE AND SETUP OUR LIB EDIT MODE REFERENCES
+-- ****************************************************************
+local LEM = LibStub('LibEditMode')
+
+-- additional (anonymous) callbacks
+LEM:RegisterCallback('enter', function()
+	-- from here you can show your button if it was hidden
+    roleCountText:SetText("9 / 9 / 99")
+end)
+LEM:RegisterCallback('exit', function()
+	-- from here you can hide your button if it's supposed to be hidden
+    roleCountFrame:GetScript("OnEvent")(roleCountFrame, "GROUP_ROSTER_UPDATE")
+end)
+LEM:RegisterCallback('layout', function(layoutName)
+	-- this will be called every time the Edit Mode layout is changed (which also happens at login),
+	-- use it to load the saved button position from savedvariables and position it
+    if not RoleCountDB then
+		RoleCountDB = {}
+	end
+	if not RoleCountDB[layoutName] then
+		RoleCountDB[layoutName] = CopyTable(defaultPosition)
+        RoleCountDB[layoutName].scale = 1
+        RoleCountDB[layoutName].colour = CreateColor(defaultColour.r, defaultColour.g, defaultColour.b, defaultColour.a)
+	end
+
+	roleCountFrame:ClearAllPoints()
+	roleCountFrame:SetPoint(RoleCountDB[layoutName].point, RoleCountDB[layoutName].x, RoleCountDB[layoutName].y)
+    roleCountFrame:SetScale(RoleCountDB[layoutName].scale)
+    local colour = CreateColor(RoleCountDB[layoutName].colour.r, RoleCountDB[layoutName].colour.g, RoleCountDB[layoutName].colour.b, RoleCountDB[layoutName].colour.a)
+    roleCountText:SetTextColor(colour.r, colour.g, colour.b, colour.a)
+
+    -- force a refresh of the roleCounts
+    roleCountFrame:GetScript("OnEvent")(frame, "GROUP_ROSTER_UPDATE")
+end)
+
+LEM:AddFrame(roleCountFrame, onPositionChanged, defaultPosition)
+
+LEM:AddFrameSettings(roleCountFrame, {
+	{
+        name = 'Scale',
+		kind = LEM.SettingType.Slider,
+		default = 1,
+		get = function(layoutName)
+			return RoleCountDB[layoutName].scale
+		end,
+		set = function(layoutName, value)
+			RoleCountDB[layoutName].scale = value
+			roleCountFrame:SetScale(value)
+		end,
+		minValue = 0.1,
+		maxValue = 5,
+		valueStep = 0.1,
+		formatter = function(value)
+			return FormatPercentage(value, true)
+		end,
+	}
+,
+    {
+        name = 'Color',
+        kind = LEM.SettingType.ColorPicker,
+        get = function(layoutName)
+            local colour = CreateColor(RoleCountDB[layoutName].colour.r, RoleCountDB[layoutName].colour.g, RoleCountDB[layoutName].colour.b, RoleCountDB[layoutName].colour.a)
+            return colour
+        end,
+        set = function(layoutName, value)
+            --local colour = CreateColor(value.r, value.g, value.b, value.a)
+            local colour = {
+                r = value.r,
+                g = value.g,
+                b = value.b,
+                a = value.c
+            }
+
+            
+            RoleCountDB[layoutName].colour = colour
+            roleCountText:SetTextColor(colour.r, colour.g, colour.b, colour.a)
+        end, 
+        hasOpacity = false,
+    }
+})
+
+
+
+
 
 
 

@@ -1,0 +1,2 @@
+Lib Edit Mode
+	https://github.com/p3lim-wow/LibEditMode/releases
