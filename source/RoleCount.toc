@@ -2,7 +2,7 @@
 ## Title: RoleCount
 ## Notes: Shows a simple count of how many of each role you have in your group.
 ## Author: Karpana @ Ysera-US
-## Version: 12.0.1-0002
+## Version: 12.0.1-0003
 ## Category: User Interface
 ## SavedVariables: RoleCountDB
 ## IconTexture: Interface\AddOns\RoleCount\Textures\RoleCount
