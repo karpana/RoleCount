@@ -1,8 +1,31 @@
 # Lib: EditMode
 
-## [12](https://github.com/p3lim-wow/LibEditMode/tree/12) (2025-12-15)
-[Full Changelog](https://github.com/p3lim-wow/LibEditMode/commits/12) [Previous Releases](https://github.com/p3lim-wow/LibEditMode/releases)
+## [13](https://github.com/p3lim-wow/LibEditMode/tree/13) (2026-01-17)
+[Full Changelog](https://github.com/p3lim-wow/LibEditMode/commits/13) [Previous Releases](https://github.com/p3lim-wow/LibEditMode/releases)
 
+- Bump version  
+- Remove mainline requirement on TOC  
+- Apparently TBC has Edit Mode  
+- :lipstick:  
+- Provide example for callbacks  
+- :lipstick:  
+- Adjust docs with links for system enums  
+- Fix post-rename update  
+- Provide the source layout name when copying  
+    Fixes #67  
+- Rework callback triggers  
+    There were some issues with the previous logic, this should fix all of  
+    those and document how they all work (kinda)  
+- Adjust docs for subSystemID  
+- Add support for subsystems (#71)  
+    * Add support for subsystems  
+    * Add missing args  
+    * Update docs  
+- Reset dialog when closing  
+    Fixes #68  
+- Check if dialog exists (#70)  
+- Update license (#69)  
+    Co-authored-by: p3lim <26496+p3lim@users.noreply.github.com>  
 - Bump version  
 - Bump peter-evans/create-pull-request from 7 to 8 (#64)  
     Bumps [peter-evans/create-pull-request](https://github.com/peter-evans/create-pull-request) from 7 to 8.  
@@ -176,62 +199,3 @@
     Co-authored-by: p3lim <26496+p3lim@users.noreply.github.com>  
 - Use GitHub for sponsorship  
 - Bump minor  
-- Update Interface version (#25)  
-    Co-authored-by: p3lim <26496+p3lim@users.noreply.github.com>  
-- Lint  
-- Add fix for 11.2  
-- Fix release job  
-- Fix artifacts  
-- Update license (#24)  
-    Co-authored-by: p3lim <26496+p3lim@users.noreply.github.com>  
-- Use beta/PTR versions  
-- Bump p3lim/toc-interface-updater from 3 to 4 (#22)  
-    Bumps [p3lim/toc-interface-updater](https://github.com/p3lim/toc-interface-updater) from 3 to 4.  
-    - [Release notes](https://github.com/p3lim/toc-interface-updater/releases)  
-    - [Commits](https://github.com/p3lim/toc-interface-updater/compare/v3...v4)  
-    ---  
-    updated-dependencies:  
-    - dependency-name: p3lim/toc-interface-updater  
-      dependency-type: direct:production  
-      update-type: version-update:semver-major  
-    ...  
-    Signed-off-by: dependabot[bot] <support@github.com>  
-    Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>  
-- Bump peter-evans/create-pull-request from 6 to 7 (#23)  
-    Bumps [peter-evans/create-pull-request](https://github.com/peter-evans/create-pull-request) from 6 to 7.  
-    - [Release notes](https://github.com/peter-evans/create-pull-request/releases)  
-    - [Commits](https://github.com/peter-evans/create-pull-request/compare/v6...v7)  
-    ---  
-    updated-dependencies:  
-    - dependency-name: peter-evans/create-pull-request  
-      dependency-type: direct:production  
-      update-type: version-update:semver-major  
-    ...  
-    Signed-off-by: dependabot[bot] <support@github.com>  
-    Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>  
-- Bump minor  
-- Use multi-valued interface version  
-- Bump peter-evans/create-pull-request from 5 to 6  
-    Bumps [peter-evans/create-pull-request](https://github.com/peter-evans/create-pull-request) from 5 to 6.  
-    - [Release notes](https://github.com/peter-evans/create-pull-request/releases)  
-    - [Commits](https://github.com/peter-evans/create-pull-request/compare/v5...v6)  
-    ---  
-    updated-dependencies:  
-    - dependency-name: peter-evans/create-pull-request  
-      dependency-type: direct:production  
-      update-type: version-update:semver-major  
-    ...  
-    Signed-off-by: dependabot[bot] <support@github.com>  
-- Bump actions/upload-artifact from 3 to 4  
-    Bumps [actions/upload-artifact](https://github.com/actions/upload-artifact) from 3 to 4.  
-    - [Release notes](https://github.com/actions/upload-artifact/releases)  
-    - [Commits](https://github.com/actions/upload-artifact/compare/v3...v4)  
-    ---  
-    updated-dependencies:  
-    - dependency-name: actions/upload-artifact  
-      dependency-type: direct:production  
-      update-type: version-update:semver-major  
-    ...  
-    Signed-off-by: dependabot[bot] <support@github.com>  
-- Bump Interface version  
-- Remove old embeds and references  
