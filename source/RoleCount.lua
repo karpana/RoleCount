@@ -60,6 +60,8 @@ roleCountFrame:SetScript("OnEvent", function(self, event, ...)
     local healerCount = 0
     local damagerCount = 0
 
+    if DLAPI then DLAPI.DebugLog(appName, "Total Members => " .. tostring(numMembers)) end
+
     local resultString="" -- make it 'disappear'
 
 
@@ -68,6 +70,7 @@ roleCountFrame:SetScript("OnEvent", function(self, event, ...)
     
     --get our instance type
     local _, instanceType = IsInInstance()
+    if DLAPI then DLAPI.DebugLog(appName, "Instance Type => " .. tostring(instanceType)) end    
     
     if (instanceType ~="raid") then
       --add self to table when not in a raid 
@@ -79,7 +82,28 @@ roleCountFrame:SetScript("OnEvent", function(self, event, ...)
     for i = 1, numMembers do
         -- Construct the unit ID string, e.g., "raid1", "raid2", etc.
         -- Player is included in the "raidN" units
-        local unitID = instanceType .. i
+       
+        --Set our default unitId Prefix
+        local unitPrefix = "raid"
+        
+        if (numMembers <=5) then
+           unitPrefix = "party"
+        end
+        if (numMembers >=6) then 
+           unitPrefix = "raid"
+        end
+        
+--        --override it for party instances.
+--        if (instanceType == "party") then
+--           unitPrefix = instanceType
+--        end
+--        
+--        local unitID = instanceType .. i
+--        if (instanceType ~="raid") then
+--           unitID = "party" .. i
+--        end
+        
+        unitID = unitPrefix .. i
         
         --fetch the unit Name
         unitName=UnitName(unitID)
