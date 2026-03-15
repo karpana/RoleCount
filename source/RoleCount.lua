@@ -73,9 +73,11 @@ roleCountFrame:SetScript("OnEvent", function(self, event, ...)
     if DLAPI then DLAPI.DebugLog(appName, "Instance Type => " .. tostring(instanceType)) end    
     
     if (instanceType ~="raid") then
-      --add self to table when not in a raid 
-      local playerName = UnitName("player")
-      table.insert(groupMembers,playerName)
+      if (instanceType ~="pvp") then
+        --add self to table when not in a raid 
+        local playerName = UnitName("player")
+        table.insert(groupMembers,playerName)
+      end
     end
 
     -- Iterate through each group member
